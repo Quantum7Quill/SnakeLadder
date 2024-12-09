@@ -21,7 +21,7 @@ class Board:
     def add_player(self, name):
         player_count = len(self.current_players.keys())
         player_id  = player_count + 1
-        self.current_players[player_id] = Player(name)
+        self.current_players[player_id] = Player(name, player_id)
         
         
     

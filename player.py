@@ -1,6 +1,7 @@
 class Player:
-    def __init__(self, name):
+    def __init__(self, name, id):
         self.name = name
+        self.id = id
         self.current_position = 0
         
     def roll_dice(self, dice):

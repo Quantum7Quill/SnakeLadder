@@ -1,6 +1,9 @@
 from board import Board
 from dice import Dice
-dice = Dice()
+dice = Dice(
+    minimum_value=1,
+    maximum_value=6
+)
 class Game:
     def __init__(self):
         self.board = Board(1, 100)
@@ -28,16 +31,19 @@ class Game:
         
             
     def play(self):
-        winner = None
-        while winner is None:
+        total_number_of_players_left_on_board = len(self.board.current_players.keys())
+        winner = []
+        while total_number_of_players_left_on_board > 1:
             number_of_players = len(self.board.current_players.keys())
             for player_id in range(1, number_of_players + 1):
+                if player_id in winner:
+                    continue
                 current_player = self.board.current_players[player_id]
                 position_of_player = current_player.get_current_position()
                 outcome = current_player.roll_dice(dice)
                 new_position_of_player = self.check_for_board_elements(
                     (position_of_player + outcome)
-                ) if (position_of_player + outcome < 100) else position_of_player 
+                ) if (position_of_player + outcome <= 100) else position_of_player 
                 
                 current_player.set_current_position(new_position_of_player)
                 
@@ -47,10 +53,13 @@ class Game:
                 )
                 
                 if new_position_of_player == 100:
-                    winner = current_player
+                    winner.append(current_player.id)
+                    total_number_of_players_left_on_board-=1
+                    print(f'{current_player.name} comes at position {len(winner)} in leaderboard')
+                    
+                if total_number_of_players_left_on_board == 1:
+                    print("Game Over")
                     break
-                
-        print("winner is ", winner.name)
         
 if __name__ == "__main__":
     game = Game()
